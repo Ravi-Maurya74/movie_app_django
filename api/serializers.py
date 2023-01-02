@@ -160,3 +160,73 @@ class CastSerializer(serializers.ModelSerializer):
             'name',
             'image',
         ]
+
+
+class UserMovieDetailSerializer(serializers.ModelSerializer):
+
+    director_name = serializers.SerializerMethodField()
+    genres = serializers.SerializerMethodField()
+    actor_name = serializers.SerializerMethodField()
+    upvoted = serializers.SerializerMethodField()
+    bookmarked = serializers.SerializerMethodField()
+
+    def get_bookmarked(self, instance):
+        user_id = self.context.get("user_id")
+        user_instance = User.objects.get(pk=user_id)
+        if (instance.bookmarked_by.contains(user_instance)):
+            return True
+        return False
+
+    def get_upvoted(self, instance):
+        user_id = self.context.get("user_id")
+        user_instance = User.objects.get(pk=user_id)
+        if (instance.upvoted_by.contains(user_instance)):
+            return True
+        return False
+
+    def get_actor_name(self, instance):
+        result = []
+        for actor in instance.actors.all():
+            m = {
+                "name": actor.name,
+                "image": actor.profile_pic_url
+            }
+            result.append(m)
+        return result
+
+    def get_genres(self, instance):
+        return [tag.genre for tag in instance.tag.all()]
+
+    def get_director_name(self, instance):
+        result = []
+        for actor in instance.director.all():
+            m = {
+                "id": actor.id,
+                "name": actor.name,
+                "image": actor.profile_pic_url
+            }
+            result.append(m)
+        return result
+
+    class Meta:
+        model = Movie
+        fields = [
+            'id',
+            'title',
+            'year',
+            'storyline',
+            'duration',
+            'rating',
+            'number_of_reviews',
+            'imageUrl',
+            'cardImageUrl',
+            'director',
+            'actors',
+            'trailer_url',
+            'tag',
+            'director_name',
+            'actor_name',
+            'genres',
+            'upvoted',
+            'bookmarked',
+        ]

@@ -23,9 +23,13 @@ class UserView(admin.ModelAdmin):
     readonly_fields = ('id',)
 
 
+class MovieView(admin.ModelAdmin):
+    readonly_fields = ('id',)
+
+
 admin.site.register(Cast, CastView)
 admin.site.register(Comment)
-admin.site.register(Movie)
+admin.site.register(Movie, MovieView)
 admin.site.register(User, UserView)
 admin.site.register(Review, Reviewview)
 admin.site.register(Recommend)

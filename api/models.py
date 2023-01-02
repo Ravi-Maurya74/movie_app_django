@@ -29,7 +29,6 @@ class Movie(models.Model):
     rating = models.FloatField(default=0)
     number_of_reviews = models.IntegerField(default=0)
     upvotes = models.IntegerField(default=0)
-    
 
     def __str__(self) -> str:
         return self.title
@@ -40,6 +39,9 @@ class User(models.Model):
     password = models.CharField(max_length=50)
     name = models.CharField(max_length=50)
     profile_pic_url = models.URLField(blank=True, max_length=250)
+    upvoted_movies = models.ManyToManyField(Movie, related_name='upvoted_by')
+    bookmarked_movies = models.ManyToManyField(
+        Movie, related_name='bookmarked_by')
 
     def __str__(self) -> str:
         return self.name
@@ -56,7 +58,7 @@ class Review(models.Model):
     description = models.CharField(max_length=400)
     date = models.DateField(auto_now=True)
     upvote = models.IntegerField(default=0)
-    upvoted_by = models.ManyToManyField(User,related_name='upvoted_reviews')
+    upvoted_by = models.ManyToManyField(User, related_name='upvoted_reviews')
 
     def __str__(self) -> str:
         return self.description[0:30]
@@ -87,7 +89,7 @@ class Comment(models.Model):
     replied_to = models.ForeignKey(
         'self', null=True, blank=True, on_delete=models.CASCADE, related_name='reply')
     upvote = models.IntegerField(default=0)
-    upvoted_by = models.ManyToManyField(User,related_name='upvoted_comments')
+    upvoted_by = models.ManyToManyField(User, related_name='upvoted_comments')
 
     def __str__(self) -> str:
         return self.comment[0:30]

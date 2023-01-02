@@ -13,4 +13,11 @@ urlpatterns = [
     path('filteredMovies/', views.get_filtered_movies),
     path('searchMovies/', views.search_movie),
     path('searchCast/', views.search_cast),
+    path('addActor/', views.add_actor),
+    path('addDirector/', views.add_director),
+    path('upvoteMovie/', views.upvote_movie),
+    path('downvoteMovie/', views.downvote_movie),
+    path('movieDetails/', views.get_movie_details),
+    path('bookmarkMovie/', views.bookmark_movie),
+    path('removeBookmark/', views.remove_bookmark),
 ]
