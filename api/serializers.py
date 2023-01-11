@@ -103,6 +103,23 @@ class MovieOverviewSerializer(serializers.ModelSerializer):
         ]
 
 
+class NewMovieSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Movie
+        fields = [
+            'id',
+            'title',
+            'year',
+            'duration',
+            'storyline',
+            'imageUrl',
+            'cardImageUrl',
+            'trailer_url',
+            'tag',
+        ]
+
+
 class MovieFilterSerializer(serializers.ModelSerializer):
     genres = serializers.SerializerMethodField()
 
@@ -125,6 +142,14 @@ class MovieFilterSerializer(serializers.ModelSerializer):
 class ReviewSerializer(serializers.ModelSerializer):
     profile_pic_url = serializers.SerializerMethodField()
     name = serializers.SerializerMethodField()
+    upvoted = serializers.SerializerMethodField()
+
+    def get_upvoted(self,instance):
+        user_id = self.context.get("user_id")
+        user_instance = User.objects.get(pk=user_id)
+        if instance.upvoted_by.contains(user_instance):
+            return True;
+        return False;
 
     def get_name(self, instance):
         return instance.user.name
@@ -135,6 +160,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = [
+            'id',
             'user',
             'name',
             'profile_pic_url',
@@ -144,6 +170,7 @@ class ReviewSerializer(serializers.ModelSerializer):
             'date',
             'upvote',
             'upvoted_by',
+            'upvoted',
         ]
 
 
@@ -159,6 +186,15 @@ class CastSerializer(serializers.ModelSerializer):
             'id',
             'name',
             'image',
+        ]
+
+class NewCastSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Cast
+        fields = [
+            'id',
+            'name',
+            'profile_pic_url',
         ]
 
 

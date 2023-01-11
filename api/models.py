@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from datetime import timedelta
+import datetime
 
 # Create your models here.
 
@@ -29,6 +30,7 @@ class Movie(models.Model):
     rating = models.FloatField(default=0)
     number_of_reviews = models.IntegerField(default=0)
     upvotes = models.IntegerField(default=0)
+    added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
         return self.title
@@ -56,9 +58,16 @@ class Review(models.Model):
         validators=[MinValueValidator(0.0), MaxValueValidator(10.0)]
     )
     description = models.CharField(max_length=400)
-    date = models.DateField(auto_now=True)
+    date = models.DateField(auto_now_add=True)
     upvote = models.IntegerField(default=0)
-    upvoted_by = models.ManyToManyField(User, related_name='upvoted_reviews')
+    upvoted_by = models.ManyToManyField(
+        User, related_name='upvoted_reviews', blank=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'movie'], name='review_constraint')
+        ]
 
     def __str__(self) -> str:
         return self.description[0:30]
@@ -82,7 +91,7 @@ class Comment(models.Model):
         User, related_name='comment', on_delete=models.CASCADE)
     movie = models.ForeignKey(
         Movie, related_name='comment', on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
     comment = models.CharField(max_length=200)
     liked_by = models.ManyToManyField(
         User, related_name='comments', blank=True)

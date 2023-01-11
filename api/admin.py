@@ -24,7 +24,7 @@ class UserView(admin.ModelAdmin):
 
 
 class MovieView(admin.ModelAdmin):
-    readonly_fields = ('id',)
+    readonly_fields = ('id', 'added')
 
 
 admin.site.register(Cast, CastView)
