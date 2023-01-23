@@ -26,4 +26,5 @@ urlpatterns = [
     path('addNewCast/', views.CreateNewCast.as_view()),
     path('addNewMovie/', views.NewMovie.as_view()),
     path('getBookmarkedMovies/', views.bookmarked_movies),
+    path('editAccountInfo/', views.edit_account_info),
 ]

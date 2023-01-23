@@ -239,6 +239,7 @@ class CreateNewCast(generics.CreateAPIView):
     queryset = Cast.objects.all()
     serializer_class = NewCastSerializer
 
+
 @api_view(['POST'])
 def bookmarked_movies(request):
     received_json_data = json.loads(request.body)
@@ -246,3 +247,17 @@ def bookmarked_movies(request):
     movies_instance = user_instance.bookmarked_movies.all()
     data = MovieFilterSerializer(movies_instance, many=True).data
     return Response(data)
+
+
+@api_view(['POST'])
+def edit_account_info(request):
+    received_json_data = json.loads(request.body)
+    user_instance = User.objects.get(pk=received_json_data['user_id'])
+    change_name = received_json_data['change_name']
+    change_profile_pic = received_json_data['change_profile_pic']
+    if change_name:
+        user_instance.name = received_json_data['name']
+    if change_profile_pic:
+        user_instance.profile_pic_url = received_json_data['profile_pic_url']
+    user_instance.save()
+    return Response({'status': 'Account info updated'})
